@@ -1,0 +1,18 @@
+{
+  "name": "mk-home-temp",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon src/app.js",
+    "start": "NODE_ENV=development node src/app.js",
+    "prod": "NODE_ENV=production node src/app.js"
+  },
+  "author": "Moritz Kanzler <developer@moritzkanzler.de>",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "node-dht-sensor": "^0.4.3"
+  }
+}
