@@ -1,0 +1,12 @@
+node_modules
+**/conf
+.git
+.env
+.env.sample
+.env.production
+.gitignore
+.prettierrc
+docker-compose.yml
+Dockerfile
+LICENSE
+README.md

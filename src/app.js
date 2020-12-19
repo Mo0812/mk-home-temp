@@ -1,17 +1,23 @@
-var sensor = require("node-dht-sensor");
+const path = require("path");
 
-const trackTmp = async () => {
-while (true) {
-    try {
-    var readout = sensor.read(22, 22);
-    console.log(`temperature: ${readout.temperature.toFixed()}°C, ` +
-              `humidity: ${readout.humidity.toFixed()}%, ` +
-              `valid: ${readout.isValid}`);
-    await new Promise((r) => setTimeout(r, 1000));
-    } catch (err) {
-        console.error(err);
+try {
+    if (process.env.NODE_ENV == "production") {
+        const result = require("dotenv").config({
+            path: path.resolve(__dirname, "../.env." + process.env.NODE_ENV),
+        });
+        if (result.error) {
+            throw result.error;
+        }
+    } else {
+        const result = require("dotenv").config();
+        if (result.error) {
+            throw result.error;
+        }
     }
-}
+} catch (e) {
+    console.log("error", "ENV file not found");
+    throw e;
 }
 
-trackTmp();
+require("./modules/expressServer");
+require("./modules/startupServices");
