@@ -50,7 +50,12 @@ const protocolSensorData = () => {
                         currentData.protocolTime,
                     ],
                     (err) => {
-                        logger.log("error", "Error on inserting data: " + err);
+                        if (err) {
+                            logger.log(
+                                "error",
+                                "Error on inserting data: " + err
+                            );
+                        }
                     }
                 );
                 protocolEmitter.emit("dht-protocol-update", currentData);
