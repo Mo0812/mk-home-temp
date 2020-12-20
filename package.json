@@ -23,8 +23,6 @@
     "mysql": "^2.18.1",
     "node-dht-sensor": "^0.4.3",
     "sqlite3": "^5.0.0",
-    "swagger-jsdoc": "^6.0.0-rc.1",
-    "swagger-ui-express": "^4.1.5",
     "winston": "^3.3.3",
     "ws": "^7.3.1"
   }
