@@ -13,7 +13,10 @@ const _initDatabase = () => {
         "CREATE TABLE IF NOT EXISTS `sensor_protocol` (  `id` INTEGER PRIMARY KEY AUTOINCREMENT, `temperature` REAL, `humidity` REAL, `protocolTime` INTEGER);",
         (err, _) => {
             if (err) {
-                logger.log("error", err);
+                logger.log(
+                    "error",
+                    "Error on creating sensor protocol table: " + err
+                );
             }
         }
     );
@@ -37,7 +40,7 @@ const protocolSensorData = () => {
                         currentData.protocolTime,
                     ],
                     (err) => {
-                        logger.log("error", err);
+                        logger.log("error", "Error on inserting data: " + err);
                     }
                 );
                 protocolEmitter.emit("dht-protocol-update", currentData);
@@ -53,7 +56,6 @@ const getAll = () => {
             if (err) {
                 reject(err);
             }
-            console.log(rows);
             resolve(rows);
         });
     });
