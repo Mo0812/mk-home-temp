@@ -60,7 +60,7 @@ const getAll = () => {
     });
 };
 
-const getCurrent = () => {
+const getCurrent = (options = {}) => {
     return new Promise((resolve, reject) => {
         if (protocolEnabled && lastValidData) {
             resolve(lastValidData);
@@ -71,7 +71,15 @@ const getCurrent = () => {
                     if (err) {
                         reject(err);
                     }
-                    resolve(rows[0]);
+                    var data = rows[0];
+                    if (options.hr) {
+                        const dateObj = new Date(parseInt(data.protocolTime));
+                        data.protocolTime =
+                            dateObj.toLocaleDateString("de-DE") +
+                            " " +
+                            dateObj.toLocaleTimeString("de-DE");
+                    }
+                    resolve(data);
                 }
             );
         }
