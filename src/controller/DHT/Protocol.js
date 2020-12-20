@@ -4,7 +4,7 @@ const db = require("../../system/Database/DBLite");
 const logger = require("../../system/Logger/Logger");
 
 const protocolEnabled = process.env.SENSOR_PROTOCOL_ENABLED || true;
-var lastValidData = {};
+var lastValidData = null;
 
 var protocolEmitter = new events.EventEmitter();
 
