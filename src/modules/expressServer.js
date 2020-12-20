@@ -13,15 +13,20 @@ const dhtRouter = require("../routes/DHT/DHT");
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use("/monitoring", monitoringRouter);
-app.use("/logging", loggingRouter);
-app.use("/dht", dhtRouter);
 
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "../views"));
 
+app.use("/monitoring", monitoringRouter);
+app.use("/logging", loggingRouter);
+app.use("/dht", dhtRouter);
+
 app.use((error, req, res, next) => {
     ErrorHandler.handleError(error, res);
+});
+
+app.get("/", (req, res, next) => {
+    res.redirect(301, "/dht/monitor");
 });
 
 app.listen(port);

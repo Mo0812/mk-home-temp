@@ -22,7 +22,7 @@ dhtRouter.get("/all", async (req, res, next) => {
     }
 });
 
-dhtRouter.get("/", async (req, res, next) => {
+dhtRouter.get("/monitor", async (req, res, next) => {
     const data = await protocol.getCurrent({ hr: true });
     res.render("dht", {
         data,
