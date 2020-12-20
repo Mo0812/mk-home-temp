@@ -18,10 +18,9 @@ const readData = () => {
         };
         if (process.env.NODE_ENV == "production") {
             const readout = sensor.read(sensorType, sensorPin);
-            logger.log("info", readout);
             data = {
-                temperature: readout.temperature.toFixed(),
-                humidity: readout.humidity.toFixed(),
+                temperature: readout.temperature.toFixed(2),
+                humidity: readout.humidity.toFixed(2),
                 valid: readout.isValid,
             };
         }
