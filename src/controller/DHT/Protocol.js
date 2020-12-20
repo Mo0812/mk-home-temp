@@ -26,7 +26,7 @@ const protocolSensorData = () => {
     if (protocolEnabled) {
         sensorEmitter.on("dht-sensor-update", (data) => {
             console.log(data);
-            if (data.valid) {
+            if (data && data.valid) {
                 const currentData = {
                     temperature: data.temperature,
                     humidity: data.humidity,
