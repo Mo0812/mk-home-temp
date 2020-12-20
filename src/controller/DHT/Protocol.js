@@ -25,7 +25,6 @@ const _initDatabase = () => {
 const protocolSensorData = () => {
     if (protocolEnabled) {
         sensorEmitter.on("dht-sensor-update", (data) => {
-            console.log(data);
             if (data && data.valid) {
                 const currentData = {
                     temperature: data.temperature,
