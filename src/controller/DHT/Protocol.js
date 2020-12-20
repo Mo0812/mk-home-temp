@@ -4,6 +4,7 @@ const db = require("../../system/Database/DBLite");
 const logger = require("../../system/Logger/Logger");
 
 const protocolEnabled = process.env.SENSOR_PROTOCOL_ENABLED || true;
+var lastValidData = {};
 
 var protocolEmitter = new events.EventEmitter();
 
@@ -23,14 +24,24 @@ const protocolSensorData = () => {
         sensorEmitter.on("dht-sensor-update", (data) => {
             console.log(data);
             if (data.valid) {
+                const currentData = {
+                    temperature: data.temperature,
+                    humidity: data.humidity,
+                    protocolTime: new Date().getTime(),
+                };
                 db.query(
                     `INSERT INTO sensor_protocol  (temperature, humidity, protocolTime) VALUES (?, ?, ?);`,
-                    [data.temperature, data.humidity, new Date().getTime()],
+                    [
+                        currentData.temperature,
+                        currentData.humidity,
+                        currentData.protocolTime,
+                    ],
                     (err) => {
                         logger.log("error", err);
                     }
                 );
-                protocolEmitter.emit("dht-protocol-update", data);
+                protocolEmitter.emit("dht-protocol-update", currentData);
+                lastValidData = currentData;
             }
         });
     }
@@ -50,15 +61,19 @@ const getAll = () => {
 
 const getCurrent = () => {
     return new Promise((resolve, reject) => {
-        db.query(
-            `SELECT * FROM sensor_protocol ORDER BY protocolTime DESC LIMIT 1;`,
-            (err, rows) => {
-                if (err) {
-                    reject(err);
+        if (protocolEnabled && lastValidData) {
+            resolve(lastValidData);
+        } else {
+            db.query(
+                `SELECT * FROM sensor_protocol ORDER BY protocolTime DESC LIMIT 1;`,
+                (err, rows) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(rows[0]);
                 }
-                resolve(rows[0]);
-            }
-        );
+            );
+        }
     });
 };
 
