@@ -1,6 +1,6 @@
 const events = require("events");
 const { emitter: sensorEmitter } = require("./Sensor");
-const db = require("../../system/Database/SqliteDatabase");
+const db = require("../../system/Database/DBLite");
 const logger = require("../../system/Logger/Logger");
 
 const protocolEnabled = process.env.SENSOR_PROTOCOL_ENABLED || true;
@@ -8,8 +8,13 @@ const protocolEnabled = process.env.SENSOR_PROTOCOL_ENABLED || true;
 var protocolEmitter = new events.EventEmitter();
 
 const _initDatabase = () => {
-    db.run(
-        "CREATE TABLE IF NOT EXISTS `sensor_protocol` (  `id` INTEGER PRIMARY KEY AUTOINCREMENT, `temperature` REAL, `humidity` REAL, `protocolTime` INTEGER);"
+    db.query(
+        "CREATE TABLE IF NOT EXISTS `sensor_protocol` (  `id` INTEGER PRIMARY KEY AUTOINCREMENT, `temperature` REAL, `humidity` REAL, `protocolTime` INTEGER);",
+        (err, _) => {
+            if (err) {
+                logger.log("error", err);
+            }
+        }
     );
 };
 
@@ -18,7 +23,7 @@ const protocolSensorData = () => {
         sensorEmitter.on("dht-sensor-update", (data) => {
             console.log(data);
             if (data.valid) {
-                db.run(
+                db.query(
                     `INSERT INTO sensor_protocol  (temperature, humidity, protocolTime) VALUES (?, ?, ?);`,
                     [data.temperature, data.humidity, new Date().getTime()],
                     (err) => {
@@ -33,10 +38,11 @@ const protocolSensorData = () => {
 
 const getAll = () => {
     return new Promise((resolve, reject) => {
-        db.all("SELECT * FROM sensor_protocol;", (err, rows) => {
+        db.query("SELECT * FROM sensor_protocol;", (err, rows) => {
             if (err) {
                 reject(err);
             }
+            console.log(rows);
             resolve(rows);
         });
     });
@@ -44,13 +50,13 @@ const getAll = () => {
 
 const getCurrent = () => {
     return new Promise((resolve, reject) => {
-        db.get(
+        db.query(
             `SELECT * FROM sensor_protocol ORDER BY protocolTime DESC LIMIT 1;`,
-            (err, row) => {
+            (err, rows) => {
                 if (err) {
                     reject(err);
                 }
-                resolve(row);
+                resolve(rows[0]);
             }
         );
     });
