@@ -22,6 +22,17 @@ const _initDatabase = () => {
     );
 };
 
+const _formatData = (data, options) => {
+    if (options.hr) {
+        const dateObj = new Date(parseInt(data.protocolTime));
+        data.protocolTime =
+            dateObj.toLocaleDateString("de-DE") +
+            " " +
+            dateObj.toLocaleTimeString("de-DE");
+    }
+    return data;
+};
+
 const protocolSensorData = () => {
     if (protocolEnabled) {
         sensorEmitter.on("dht-sensor-update", (data) => {
@@ -63,7 +74,7 @@ const getAll = () => {
 const getCurrent = (options = {}) => {
     return new Promise((resolve, reject) => {
         if (protocolEnabled && lastValidData) {
-            resolve(lastValidData);
+            resolve(_formatData(lastValidData, options));
         } else {
             db.query(
                 `SELECT * FROM sensor_protocol ORDER BY protocolTime DESC LIMIT 1;`,
@@ -71,14 +82,7 @@ const getCurrent = (options = {}) => {
                     if (err) {
                         reject(err);
                     }
-                    var data = rows[0];
-                    if (options.hr) {
-                        const dateObj = new Date(parseInt(data.protocolTime));
-                        data.protocolTime =
-                            dateObj.toLocaleDateString("de-DE") +
-                            " " +
-                            dateObj.toLocaleTimeString("de-DE");
-                    }
+                    const data = _formatData(rows[0], options);
                     resolve(data);
                 }
             );
