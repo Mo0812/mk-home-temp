@@ -1,4 +1,4 @@
-const logConsole = process.env.LOG_CONSOLE;
+const logConsole = parseInt(process.env.LOG_CONSOLE) == 1;
 const appLogPath = "app.log";
 const errorLogPath = "error.log";
 

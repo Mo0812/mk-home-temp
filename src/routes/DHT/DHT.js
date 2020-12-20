@@ -2,6 +2,8 @@ const express = require("express");
 const protocol = require("../../controller/DHT/Protocol");
 const ApiError = require("../../helpers/Errors/ApiError");
 
+const showMonitorUI = parseInt(process.env.SHOW_MONITOR_UI) == 1;
+
 const dhtRouter = express.Router();
 
 dhtRouter.get("/current", async (req, res) => {
@@ -22,11 +24,13 @@ dhtRouter.get("/all", async (req, res, next) => {
     }
 });
 
-dhtRouter.get("/monitor", async (req, res, next) => {
-    const data = await protocol.getCurrent({ hr: true });
-    res.render("dht", {
-        data,
+if (showMonitorUI) {
+    dhtRouter.get("/monitor", async (req, res, next) => {
+        const data = await protocol.getCurrent({ hr: true });
+        res.render("dht", {
+            data,
+        });
     });
-});
+}
 
 module.exports = dhtRouter;

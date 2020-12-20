@@ -5,7 +5,7 @@ const path = require("path");
 const ErrorHandler = require("../helpers/ErrorHandler/ErrorHandler");
 
 const expressPort = process.env.PORT || 8000;
-const showMonitorUI = process.env.SHOW_MONITOR_UI || true;
+const showMonitorUI = parseInt(process.env.SHOW_MONITOR_UI) == 1;
 
 var app = express(),
     port = expressPort;
@@ -17,11 +17,16 @@ const dhtRouter = require("../routes/DHT/DHT");
 app.use(cors());
 app.use(bodyParser.json());
 
-if (showMonitorUI) app.set("view engine", "pug");
-app.set("views", path.join(__dirname, "../views"));
-app.get("/", (req, res, next) => {
-    res.redirect(301, "/dht/monitor");
-});
+if (showMonitorUI) {
+    app.set("view engine", "pug");
+    app.set("views", path.join(__dirname, "../views"));
+
+    app.use(express.static(path.join(__dirname, "../public")));
+
+    app.get("/", (req, res, next) => {
+        res.redirect(301, "/dht/monitor");
+    });
+}
 
 app.use("/monitoring", monitoringRouter);
 app.use("/logging", loggingRouter);

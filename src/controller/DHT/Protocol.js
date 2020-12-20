@@ -3,7 +3,7 @@ const { emitter: sensorEmitter } = require("./Sensor");
 const db = require("../../system/Database/DBLite");
 const logger = require("../../system/Logger/Logger");
 
-const protocolEnabled = process.env.SENSOR_PROTOCOL_ENABLED || true;
+const protocolEnabled = parseInt(process.env.SENSOR_PROTOCOL_ENABLED) == 1;
 var lastValidData = null;
 
 var protocolEmitter = new events.EventEmitter();
