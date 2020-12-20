@@ -1,5 +1,7 @@
-const {
-    connect: connectWS,
-} = require("../system/WebsocketServer/WebsocketServer");
+const dhtSensor = require("../controller/DHT/Sensor");
+const dhtProtocol = require("../controller/DHT/Protocol");
+const dhtSocket = require("../controller/DHT/Socket");
 
-connectWS();
+dhtSensor.startReading();
+dhtProtocol.protocolSensorData();
+dhtSocket.connectSocket();
