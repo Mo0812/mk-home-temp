@@ -16,7 +16,6 @@ const _initDatabase = () => {
 const protocolSensorData = () => {
     if (protocolEnabled) {
         sensorEmitter.on("dht-sensor-update", (data) => {
-            console.log(data);
             if (data.valid) {
                 db.run(
                     `INSERT INTO sensor_protocol  (temperature, humidity, protocolTime) VALUES (?, ?, ?);`,
