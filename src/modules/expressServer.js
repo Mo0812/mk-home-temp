@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const ErrorHandler = require("../helpers/ErrorHandler/ErrorHandler");
 
-const expressPort = process.env.PORT || 8000;
+const expressPort = process.env.EXPRESS_PORT || 8000;
 const showMonitorUI = parseInt(process.env.SHOW_MONITOR_UI) == 1;
 
 var app = express(),

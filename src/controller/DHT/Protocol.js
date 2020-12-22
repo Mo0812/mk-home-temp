@@ -65,7 +65,7 @@ const protocolSensorData = () => {
     }
 };
 
-const getAll = () => {
+const getAll = (timestampLimit = null) => {
     return new Promise((resolve, reject) => {
         db.query("SELECT * FROM sensor_protocol;", (err, rows) => {
             if (err) {
@@ -78,8 +78,9 @@ const getAll = () => {
 
 const getCurrent = (options = {}) => {
     return new Promise((resolve, reject) => {
+        var data = null;
         if (protocolEnabled && lastValidData) {
-            resolve(_formatData(lastValidData, options));
+            data = lastValidData;
         } else {
             db.query(
                 `SELECT * FROM sensor_protocol ORDER BY protocolTime DESC LIMIT 1;`,
@@ -87,11 +88,11 @@ const getCurrent = (options = {}) => {
                     if (err) {
                         reject(err);
                     }
-                    const data = _formatData(rows[0], options);
-                    resolve(data);
+                    data = rows[0];
                 }
             );
         }
+        resolve(_formatData(data, options));
     });
 };
 
