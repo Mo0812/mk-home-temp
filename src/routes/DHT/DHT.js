@@ -17,7 +17,7 @@ dhtRouter.get("/current", async (req, res) => {
 
 dhtRouter.get("/all", async (req, res, next) => {
     try {
-        const data = await protocol.getAll();
+        const data = await protocol.getAll(req.query.until);
         res.send(data);
     } catch (error) {
         next(new ApiError(500, error));

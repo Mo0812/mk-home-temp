@@ -66,13 +66,18 @@ const protocolSensorData = () => {
 };
 
 const getAll = (timestampLimit = null) => {
+    timestampLimit = timestampLimit || 0;
     return new Promise((resolve, reject) => {
-        db.query("SELECT * FROM sensor_protocol;", (err, rows) => {
-            if (err) {
-                reject(err);
+        db.query(
+            "SELECT * FROM sensor_protocol WHERE protocolTime >= (? * 1000);",
+            [timestampLimit],
+            (err, rows) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(rows);
             }
-            resolve(rows);
-        });
+        );
     });
 };
 
