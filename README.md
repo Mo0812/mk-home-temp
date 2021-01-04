@@ -101,3 +101,69 @@ WS_PORT=4001
 | WS_PORT | *VALID PORT NUMBER* | ESelect the port which should be used for the Websocket Update notifications |
 
 ## Use the project
+
+*mk-home-temp* enables functionality through different REST API endpoints. The most important ones are described below.
+
+### Get current thermometer data
+
+**GET** `/dht/current`
+
+This endpoint returns the last correct measured temperature and humidity togehter with the timestamp of the measurement in JSON format. 
+
+Example answer:
+
+```
+{
+  "temperature": "20.90",
+  "humidity": "45.10",
+  "protocolTime": 1609783539639
+}
+```
+
+### Get all tracked thermometer data
+
+**GET** `/dht/all`
+
+This endpoint returns the history of measured temperature and humidity information. It is only working when the `SENSOR_PROTOCOL_ENABLED` option is enabled.
+
+In addition to the pure request you can also add the query parameter **until** with a valid timestamp to receive only measures from now back to the given timestamp.
+
+Example answer:
+
+```
+[
+  {
+    "id": "3365",
+    "temperature": "21.3",
+    "humidity": "56.5",
+    "protocolTime": "1608923827647"
+  },
+  {
+    "id": "3366",
+    "temperature": "21.3",
+    "humidity": "56.4",
+    "protocolTime": "1608924546141"
+  },
+  {
+    "id": "3367",
+    "temperature": "21.4",
+    "humidity": "56.5",
+    "protocolTime": "1608924576751"
+  },
+  {
+    "id": "3368",
+    "temperature": "21.4",
+    "humidity": "56.5",
+    "protocolTime": "1608925328832"
+  },
+  ...
+]
+```
+
+### Show static UI
+
+**GET** `/` or `/dht/monitor/`
+
+This route is providing the static web page which shows the latest measured thermometer information. It only works when the `SHOW_MONITOR_UI` option is enabled.
+
+![The picture shows an screenshot of the static web page which is shown when using the `/` or `/dht/monitor/` route. It displays the last measured temperature and humidity values and the timestamp of the measurement](screenshot.png)
